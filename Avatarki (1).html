@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор AI аватарок</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        #aiImage {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        .download {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .telegram {
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .loading {
+            display: none;
+            margin: 15px 0;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Генератор AI аватарок</h1>
+        <input id="promptInput" type="text" placeholder="Например: аниме девушка с фиолетовыми волосами">
+        <button onclick="generateImage()">Сгенерировать аватарку</button>
+        <div id="loading" class="loading">Генерация... Подождите 10-20 сек.</div>
+        <img id="aiImage" alt="Сгенерированная аватарка">
+        <a id="downloadBtn" class="download" download="my_avatar.png">⬇️ Скачать аватарку</a>
+        <a class="telegram" href="https://t.me/yes_bigmoney" target="_blank">👉 Telegram: @yes_bigmoney</a>
+    </div>
+
+    <script>
+        function generateImage() {
+            const prompt = document.getElementById("promptInput").value.trim();
+            if (!prompt) {
+                alert("Введите описание аватарки!");
+                return;
+            }
+
+            const image = document.getElementById("aiImage");
+            const downloadBtn = document.getElementById("downloadBtn");
+            const loading = document.getElementById("loading");
+
+            // Показываем загрузку
+            loading.style.display = "block";
+            image.style.display = "none";
+            downloadBtn.style.display = "none";
+
+            // Генерация URL с таймштампом (чтобы избежать кеширования)
+            const timestamp = new Date().getTime();
+            const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?${timestamp}`;
+
+            image.onload = function() {
+                loading.style.display = "none";
+                image.style.display = "block";
+                downloadBtn.href = url;
+                downloadBtn.style.display = "block";
+            };
+
+            image.onerror = function() {
+                loading.style.display = "none";
+                alert("Ошибка генерации! Попробуйте другой запрос.");
+            };
+
+            image.src = url;
+        }
+    </script>
+</body>
+</html>
